@@ -1,0 +1,7 @@
+{
+  "name": "Tile Auto Player",
+  "short_name": "Tile Player",
+  "start_url": "index.html",
+  "display": "standalone",
+  "orientation": "portrait"
+}

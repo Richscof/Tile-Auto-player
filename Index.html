@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Tile Auto Player</title>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      padding: 30px;
+    }
+
+    button, select {
+      padding: 12px 20px;
+      margin: 8px;
+      font-size: 17px;
+    }
+
+    #status,
+    #counter {
+      font-size: 20px;
+      margin-top: 18px;
+    }
+
+    #tiles {
+      display: grid;
+      grid-template-columns: repeat(2, 100px);
+      gap: 10px;
+      justify-content: center;
+      margin-top: 20px;
+    }
+
+    .tile {
+      height: 100px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <h2>🎮 Tile Auto Player</h2>
+
+  <label>Speed:</label>
+
+  <select id="speed">
+    <option value="1000">1 second</option>
+    <option value="500">0.5 second</option>
+    <option value="250">0.25 second</option>
+  </select>
+
+  <br>
+
+  <button id="startBtn">START</button>
+  <button id="stopBtn">STOP</button>
+  <button id="resetBtn">RESET</button>
+
+  <p id="status">⏹️ Stopped</p>
+  <p id="counter">Clicks: 0</p>
+
+  <div id="tiles">
+    <button class="tile">1</button>
+    <button class="tile">2</button>
+    <button class="tile">3</button>
+    <button class="tile">4</button>
+  </div>
+
+  <script>
+    let running = false;
+    let timer = null;
+    let tileIndex = 0;
+
+    let clicks = Number(localStorage.getItem("clicks"));
+
+    if (isNaN(clicks)) {
+      clicks = 0;
+    }
+
+    const startBtn = document.getElementById("startBtn");
+    const stopBtn = document.getElementById("stopBtn");
+    const resetBtn = document.getElementById("resetBtn");
+
+    const speedSelect = document.getElementById("speed");
+    const status = document.getElementById("status");
+    const counter = document.getElementById("counter");
+
+    const tiles = document.querySelectorAll(".tile");
+
+    counter.textContent = "Clicks: " + clicks;
+
+    startBtn.onclick = function () {
+      if (running) {
+        return;
+      }
+
+      running = true;
+
+      status.textContent = "▶️ Running...";
+
+      const speed = Number(speedSelect.value);
+
+      timer = setInterval(function () {
+
+        tiles[tileIndex].click();
+
+        tileIndex++;
+
+        if (tileIndex >= tiles.length) {
+          tileIndex = 0;
+        }
+
+        clicks++;
+
+        localStorage.setItem("clicks", clicks);
+
+        counter.textContent = "Clicks: " + clicks;
+
+      }, speed);
+    };
+
+    stopBtn.onclick = function () {
+      running = false;
+
+      if (timer !== null) {
+        clearInterval(timer);
+        timer = null;
+      }
+
+      status.textContent = "⏹️ Stopped";
+    };
+
+    resetBtn.onclick = function () {
+      running = false;
+
+      if (timer !== null) {
+        clearInterval(timer);
+        timer = null;
+      }
+
+      clicks = 0;
+      tileIndex = 0;
+
+      localStorage.setItem("clicks", "0");
+
+      counter.textContent = "Clicks: 0";
+      status.textContent = "⏹️ Stopped";
+    };
+
+    tiles.forEach(function (tile) {
+      tile.onclick = function () {
+        status.textContent =
+          "✅ Tile " + tile.textContent + " clicked";
+      };
+    });
+  </script>
+
+</body>
+</html>
