@@ -1,8 +1,14 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+  <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  
   <title>Tile Auto Player</title>
+
+  <!-- PWA Manifest -->
+  <link rel="manifest" href="./manifest.json">
+  <meta name="theme-color" content="#111111">
 
   <style>
     body {
@@ -152,7 +158,20 @@
           "✅ Tile " + tile.textContent + " clicked";
       };
     });
+
+    // Register Service Worker
+    if ("serviceWorker" in navigator) {
+      window.addEventListener("load", function () {
+        navigator.serviceWorker.register("./service-worker.js")
+          .then(function () {
+            console.log("Service Worker registered");
+          })
+          .catch(function (error) {
+            console.log("Service Worker error:", error);
+          });
+      });
+    }
   </script>
 
 </body>
-</html>
+</html> 
